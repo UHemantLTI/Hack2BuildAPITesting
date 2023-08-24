@@ -1,0 +1,129 @@
+{
+    "_version": "1.49.0",
+    "sap.app": {
+        "id": "com.fileupload.apitesting",
+        "type": "application",
+        "i18n": "i18n/i18n.properties",
+        "applicationVersion": {
+            "version": "0.0.1"
+        },
+        "title": "{{appTitle}}",
+        "description": "{{appDescription}}",
+        "resources": "resources.json",
+        "sourceTemplate": {
+            "id": "@sap/generator-fiori:basic",
+            "version": "1.10.5",
+            "toolsId": "90dfaa5a-6b70-4a1d-be1c-7c950556d262"
+        },
+        "dataSources": {
+            "digital": {
+              "uri": "/",
+              "type": "OData",
+              "settings": {
+                "odataVersion": "4.0"
+              }
+            }
+          }
+    },
+    "sap.ui": {
+        "technology": "UI5",
+        "icons": {
+            "icon": "",
+            "favIcon": "",
+            "phone": "",
+            "phone@2": "",
+            "tablet": "",
+            "tablet@2": ""
+        },
+        "deviceTypes": {
+            "desktop": true,
+            "tablet": true,
+            "phone": true
+        }
+    },
+    "sap.ui5": {
+        "flexEnabled": true,
+        "dependencies": {
+            "minUI5Version": "1.117.0",
+            "libs": {
+                "sap.m": {},
+                "sap.ui.core": {},
+                "sap.f": {},
+                "sap.suite.ui.generic.template": {},
+                "sap.ui.comp": {},
+                "sap.ui.generic.app": {},
+                "sap.ui.table": {},
+                "sap.ushell": {}
+            }
+        },
+        "contentDensities": {
+            "compact": true,
+            "cozy": true
+        },
+        "models": {
+            "i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "settings": {
+                    "bundleName": "com.fileupload.apitesting.i18n.i18n"
+                }
+            },
+            "digital": {
+                "type": "sap.ui.model.odata.v2.ODataModel",
+                "settings": {
+                  "defaultOperationMode": "Server",
+                  "defaultBindingMode": "OneWay",
+                  "defaultCountMode": "Request",
+                  "useBatch": true
+                },
+                "dataSource": "digital",
+                "preload": true
+            }
+        },
+        "resources": {
+            "css": [
+                {
+                    "uri": "css/style.css"
+                }
+            ]
+        },
+        "routing": {
+            "config": {
+                "routerClass": "sap.m.routing.Router",
+                "viewType": "XML",
+                "async": true,
+                "viewPath": "com.fileupload.apitesting.view",
+                "controlAggregation": "pages",
+                "controlId": "app",
+                "clearControlAggregation": false
+            },
+            "routes": [
+                {
+                    "name": "RouteFileUpload",
+                    "pattern": ":?query:",
+                    "target": [
+                        "TargetFileUpload"
+                    ]
+                }
+            ],
+            "targets": {
+                "TargetFileUpload": {
+                    "viewType": "XML",
+                    "transition": "slide",
+                    "clearControlAggregation": false,
+                    "viewId": "FileUpload",
+                    "viewName": "FileUpload"
+                }
+            }
+        },
+        "rootView": {
+            "viewName": "com.fileupload.apitesting.view.App",
+            "type": "XML",
+            "async": true,
+            "id": "App"
+        }
+    },
+    "sap.cloud": {
+        "public": true,
+        "service": "hack2build-approuter"
+    }
+}

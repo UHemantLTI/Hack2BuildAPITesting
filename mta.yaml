@@ -1,0 +1,92 @@
+_schema-version: "3.2"
+ID: Hack2BuildAPITesting
+version: 0.0.1
+modules:
+- name: Hack2BuildAPITesting-destination-content
+  type: com.sap.application.content
+  requires:
+  - name: Hack2BuildAPITesting-destination-service
+    parameters:
+      content-target: true
+  - name: Hack2BuildAPITesting_html_repo_host
+    parameters:
+      service-key:
+        name: Hack2BuildAPITesting_html_repo_host-key
+  - name: uaa_Hack2BuildAPITesting
+    parameters:
+      service-key:
+        name: uaa_Hack2BuildAPITesting-key
+  parameters:
+    content:
+      instance:
+        destinations:
+        - Name: hack2build_approuter_Hack2BuildAPITesting_html_repo_host
+          ServiceInstanceName: Hack2BuildAPITesting-html5-app-host-service
+          ServiceKeyName: Hack2BuildAPITesting_html_repo_host-key
+          sap.cloud.service: hack2build-approuter
+        - Authentication: OAuth2UserTokenExchange
+          Name: hack2build_approuter_uaa_Hack2BuildAPITesting
+          ServiceInstanceName: Hack2BuildAPITesting-xsuaa-service
+          ServiceKeyName: uaa_Hack2BuildAPITesting-key
+          sap.cloud.service: hack2build-approuter
+        existing_destinations_policy: ignore
+  build-parameters:
+    no-source: true
+- name: Hack2BuildAPITesting-app-content
+  type: com.sap.application.content
+  path: .
+  requires:
+  - name: Hack2BuildAPITesting_html_repo_host
+    parameters:
+      content-target: true
+  build-parameters:
+    build-result: resources
+    requires:
+    - artifacts:
+      - comfileuploadapitesting.zip
+      name: comfileuploadapitesting
+      target-path: resources/
+- name: comfileuploadapitesting
+  type: html5
+  path: com.fileupload.apitesting
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+resources:
+- name: Hack2BuildAPITesting-destination-service
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      HTML5Runtime_enabled: true
+      init_data:
+        instance:
+          destinations:
+          - Authentication: NoAuthentication
+            Name: ui5
+            ProxyType: Internet
+            Type: HTTP
+            URL: https://ui5.sap.com
+          existing_destinations_policy: update
+      version: 1.0.0
+    service: destination
+    service-name: Hack2BuildAPITesting-destination-service
+    service-plan: lite
+- name: Hack2BuildAPITesting_html_repo_host
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-name: Hack2BuildAPITesting-html5-app-host-service
+    service-plan: app-host
+- name: uaa_Hack2BuildAPITesting
+  type: org.cloudfoundry.managed-service
+  parameters:
+    path: ./xs-security.json
+    service: xsuaa
+    service-name: Hack2BuildAPITesting-xsuaa-service
+    service-plan: application
+parameters:
+  deploy_mode: html5-repo
